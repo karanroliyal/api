@@ -9,6 +9,7 @@ class Crud extends CI_Controller
         parent::__construct();
         $this->load->model('crud_db');
         $this->load->library('form_validation');
+        $this->config->load('form_validation', TRUE); // Load validation rules
     }
 
     public function create_operation(){
@@ -16,14 +17,14 @@ class Crud extends CI_Controller
         $table_name = $_POST['table_name'];
         $action = $_POST['action'];
 
-        print_r($_POST);die;
+        // print_r($_POST);die;
 
         $_POST = $this->fx->remove_unwanted_data($_POST);
 
         $rules = $this->config->item($table_name, 'form_validation');
 
         if (!$rules) {
-            echo json_encode(['status' => 'error', 'message' => 'Validation rules not found!']);
+            echo $this->fx->api_response(400 , 'error' , 'Validation rules not found!');
             return;
         }
 
@@ -32,11 +33,13 @@ class Crud extends CI_Controller
 
         if ($this->form_validation->run()) {
 
-            if($action == 'insert' ){
+            if($action == 'insert'){
 
-                $result = $this->Crud_db->insert_data_db($table_name, $_POST);
+                $_POST['create_by'] = $this->CI->jwt_token->get_verified_token()->id();
 
-                if($result){
+                $result = $this->crud_db->insert_data_db($table_name, $_POST);
+
+                if($result == 1){
 
                     echo $this->fx->api_response(200 , $result , "Data inserted successfully on table $table_name");
 
@@ -48,12 +51,15 @@ class Crud extends CI_Controller
 
             }else if($action == 'update'){
 
+                $_POST['modify_by'] = $this->CI->jwt_token->get_verified_token()->id();
+
+                $id_on_update_perform = $_POST['id'];
+                unset($_POST['id']);
                 if(empty(trim($_POST['password']))){
                     unset($_POST['password']);
                 }
-                $id_on_update_perform = $_POST['id']; 
 
-                $this->Crud_db->update_data_db($table_name, $_POST , $id_on_update_perform);
+                $this->crud_db->update_data_db($table_name, $_POST , $id_on_update_perform);
 
             }
             

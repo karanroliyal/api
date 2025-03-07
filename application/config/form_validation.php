@@ -11,7 +11,7 @@ $config = [
         [
             'field' => 'user_email',
             'label' => 'Email',
-            'rules' => 'required|valid_email|is_unique[user_name.email]'
+            'rules' => 'required|valid_email|is_unique[user_master.user_email]'
         ],
         [
             'field' => 'password',

@@ -10,9 +10,9 @@ class Crud_db extends CI_Model{
 
     }
 
-    public function update_data_db(){
+    public function update_data_db($table_name , $updated_data , $id_on_update_perform){
 
-        echo 'update';
+        // $this->db
 
     }
 
