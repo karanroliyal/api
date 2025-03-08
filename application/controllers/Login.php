@@ -23,7 +23,7 @@ class Login extends CI_Controller
 
             $jwtToken = $this->jwt_token->generate_token($result);
 
-            $this->fx->user_log_creator($log_data['action'] , $_POST , $log_data['table_name'] , $result->id , 'login');
+            // $this->fx->user_log_creator($log_data['action'] , $_POST , $log_data['table_name'] , $result->id , 'login');
 
             echo $this->fx->api_response(200 ,  $jwtToken , 'Login successfully');
 

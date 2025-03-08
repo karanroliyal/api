@@ -13,8 +13,7 @@ class Jwt_token
         log_message('debug', 'JWT Library Initialized');
     }
 
-    public function generate_token($user_data)
-    {
+    public function generate_token($user_data){
         $issued_at = time();
         $expiration_time = $issued_at + (60 * 60*24 ); 
 
@@ -28,8 +27,7 @@ class Jwt_token
         return JWT::encode($payload, $this->secret_key, 'HS256');
     }
 
-    public function get_verified_token()
-    {
+    public function get_verified_token(){
         $CI = &get_instance();
         $authHeader = $CI->input->get_request_header('authorization');
     
